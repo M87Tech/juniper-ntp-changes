@@ -20,7 +20,34 @@ set security-zone loopback interfaces lo0.0 host-inbound-traffic system-services
 ### Permit NTP queries to relavent zones
 
 set security policies from-zone loopback to-zone untrust policy ntp-out match source-address loopback0
-set security policies from-zone loopback to-zone untrust policy ntp-out match destination-address any-ipv4   ### Can lock
+set security policies from-zone loopback to-zone untrust policy ntp-out match destination-address any-ipv4   ### Can lock down if neede
+set security policies from-zone loopback to-zone untrust policy ntp-out match application junos-ntp
+set security policies from-zone loopback to-zone untrust policy ntp-out then permit 
+set security policies from-zone loopback to-zone untrust policy ntp-out then log session-init
+set security policies from-zone loopback to-zone untrust policy ntp-out then log session-close
+
+### Permit NTP internal queries
+
+set security policies from-zone trust to-zone loopback policy ntp-out match source-address INTERNAL-SUBNETS-HERE
+set security policies from-zone trust to-zone loopback policy ntp-out match destination-address loopback0
+set security policies from-zone trust to-zone loopback policy ntp-out match application junos-ntp
+set security policies from-zone trust to-zone loopback policy ntp-out then permit 
+set security policies from-zone trust to-zone loopback policy ntp-out then log session-init
+set security policies from-zone trust to-zone loopback policy ntp-out then log session-close
+
+### permit internal ICMP to loopback
+
+set security policies from-zone trust to-zone loopback policy ntp-out match source-address INTERNAL-SUBNETS-HERE
+set security policies from-zone trust to-zone loopback policy ntp-out match destination-address loopback0
+set security policies from-zone trust to-zone loopback policy ntp-out match application junos-icmp-all
+set security policies from-zone trust to-zone loopback policy ntp-out then permit 
+set security policies from-zone trust to-zone loopback policy ntp-out then log session-init
+set security policies from-zone trust to-zone loopback policy ntp-out then log session-close
+
+
+
+
+
 
 
 
