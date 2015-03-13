@@ -4,5 +4,9 @@ Juniper NTP Changes
 set interfaces lo0 unit 0 family inet 192.168.99.99/32  ## Create loopback interface for NTP (use which ever IP address suits)
 
 set system ntp server 178.18.118.13 version4
-set system ntp source-address 192.168.99.99  ### Bind to loopback
+set system ntp source-address 192.168.99.99  ### Bind NTP service to loopback interface.
+
+set  security address-book global address loopback0 192.168.99.99/32  ### Create address-book entry for new Loopback0 interface.
+
+
 
