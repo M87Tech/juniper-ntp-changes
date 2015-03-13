@@ -44,6 +44,45 @@ set security policies from-zone trust to-zone loopback policy ntp-out then permi
 set security policies from-zone trust to-zone loopback policy ntp-out then log session-init
 set security policies from-zone trust to-zone loopback policy ntp-out then log session-close
 
+### NAT Overload the loopback NTP interface
+
+set security nat source rule-set loopback-to-untrust from zone loopback
+set security nat source rule-set loopback-to-untrust to zone untrust
+
+set security nat source rule-set loopback-to-untrust rule overload_loopback0_ntp match source-address-name loopback0
+set security nat source rule-set loopback-to-untrust rule overload_loopback0_ntp then source-nat interface
+
+### Use policy options to export loopback route from master table.
+
+set policy-options policy-statement ntp-loopback term loopback from instance master
+set policy-options policy-statement ntp-loopback term loopback from interface lo0.0
+set policy-options policy-statement ntp-loopback term loopback from route-filter 192.168.99.99/32 exact
+set policy-options policy-statement ntp-loopback term loopback then accept
+
+### Export route from Master table
+
+set routing-options instance-export ntp-loopback
+
+### Import route into INTERNET table
+
+set routing-instances INTERNET routing-options instance-import ntp-loopback
+
+### REMEMBER TO CREATE ROUTES ON THE LAN FOR THE DESTINATION OF JUNIPER NTP LOOPBACK 192.168.99.99/32 if they need to query it!!!
+
+Either static or advertise into the core from the ASA.
+
+ip route 192.168.99.99 255.255.255.255 DMZB_ASA_FIREWALL_INSIDE
+
+ASA will need a route too, 
+
+ip route 192.168.99.99 255.255.255.255 172.21.1.9
+
+
+
+
+
+
+
 
 
 
