@@ -1,0 +1,5 @@
+# juniper-ntp-changes
+Juniper NTP Changes
+
+set system ntp server 178.18.118.13 version4
+set system ntp source-address 192.168.99.99  ### Bind to loopback
