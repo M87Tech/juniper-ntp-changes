@@ -29,9 +29,9 @@ set security policies from-zone loopback to-zone untrust policy ntp-to-internet 
 ### Permit NTP internal queries
 
 set security policies from-zone trust to-zone loopback policy trust-to-ntp match source-address INTERNAL-SUBNETS-HERE
-set security policies from-zone trust to-zone loopback policy trust-to-ntp destination-address loopback0
-set security policies from-zone trust to-zone loopback policy trust-to-ntp application junos-ntp
-set security policies from-zone trust to-zone loopback policy trust-to-ntp permit 
+set security policies from-zone trust to-zone loopback policy trust-to-ntp match destination-address loopback0
+set security policies from-zone trust to-zone loopback policy trust-to-ntp match application junos-ntp
+set security policies from-zone trust to-zone loopback policy trust-to-ntp then permit 
 set security policies from-zone trust to-zone loopback policy trust-to-ntp then log session-init
 set security policies from-zone trust to-zone loopback policy trust-to-ntp then log session-close
 
