@@ -1,12 +1,26 @@
 # juniper-ntp-changes
 Juniper NTP Changes
 
-set interfaces lo0 unit 0 family inet 192.168.99.99/32  ## Create loopback interface for NTP (use which ever IP address suits)
+### Create new Loopback Interface
+
+set interfaces lo0 unit 0 family inet 192.168.99.99/32  ## Create loopback interface for NTP 
 
 set system ntp server 178.18.118.13 version4
 set system ntp source-address 192.168.99.99  ### Bind NTP service to loopback interface.
 
 set  security address-book global address loopback0 192.168.99.99/32  ### Create address-book entry for new Loopback0 interface.
+
+### Create Security Zones
+
+set security-zone loopback host-inbound-traffic system-services ping   ###  Allow Ping
+set security-zone loopback host-inbound-traffic system-services traceroute   ###  Allow Traceroute
+set security-zone loopback interfaces lo0.0 host-inbound-traffic system-services ping   ### Allow Ping
+set security-zone loopback interfaces lo0.0 host-inbound-traffic system-services traceroute   ### Allow Traceroute
+
+### Permit NTP queries to relavent zones
+
+set security policies from-zone loopback to-zone untrust policy ntp-out match source-address loopback0
+set security policies from-zone loopback to-zone untrust policy ntp-out match destination-address any-ipv4   ### Can lock
 
 
 
